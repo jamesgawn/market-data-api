@@ -7,7 +7,7 @@ A thin screen scrapper wrapper to make it easier to obtain latest price data for
 The follow paths are supported: 
 
 * / 
-* /fund/<isin> - To retrieve the associated fund price
+* /fund/_isin_ - To retrieve the associated fund price, replace ISIN with the relevant value for the fund concerned. e.g. /fund/GB00B0CNGR59
 
 ## Development
 
