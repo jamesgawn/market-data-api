@@ -2,12 +2,18 @@ export interface Env {
 }
 
 import { RequestLike, Router, error, json, withParams} from 'itty-router';
+import { getFundPrice } from './utils';
 const router = Router();
 
 router.all('*', withParams)
 
 router.get('/fund/:isin', ({ isin }) => {
-	return error(501, "Not yet implemented - " + isin);
+	try {
+		const price = getFundPrice(isin)
+		return price
+	} catch (err) {
+		return error(404, "Unable to find fund price for " + isin);
+	}
 });
 
 router.get('/', () => {

@@ -1,7 +1,7 @@
 name = "market-data-api" # todo
 main = "./src/index.ts"
 compatibility_date = "2024-01-20"
-
+node_compat = false
 
 routes = [
 	{ pattern = "mda.gawn.dev", custom_domain = true }

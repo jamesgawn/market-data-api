@@ -1,18 +1,15 @@
-import { JSDOM } from 'jsdom';
+import { parse } from 'node-html-parser';
 
 export const getFundPrice = async (isin: string) => {
   try {
-    const result = await fetch("https://markets.ft.com/data/funds/tearsheet/summary?s=GB00BJS8SJ34")
-    const dom = new JSDOM(await result.text());
-    const doc = dom.window.document;
-    const quoteBox = doc.querySelector(".mod-tearsheet-overview__quote__bar");  
-    if (quoteBox && quoteBox.children[0].children[1].textContent) {
-      return Number.parseFloat(quoteBox.children[0].children[1].textContent)
-    }   
-    else 
-    {
-      throw new Error("Unable to find quote box")
-    } 
+    const result = await fetch("https://markets.ft.com/data/funds/tearsheet/summary?s=" + isin)
+    const root = parse(await result.text())
+    const rawPrice = root.querySelector(".mod-tearsheet-overview__quote__bar li span.mod-ui-data-list__value")
+    if (rawPrice) {
+      return Number.parseFloat(rawPrice.innerText)
+    } else {
+      throw new Error("Unable to find price for " + isin)
+    }
   } catch (err) {
     throw new Error("Unable to find price for " + isin)
   }
