@@ -20,9 +20,14 @@ describe('Worker', () => {
 		expect(resp.status).toBe(200);
 	});
 
+	it('should return 404 for path not found', async () => {
+		const resp = await worker.fetch('/asdads');
+		expect(resp.status).toBe(404);
+	});
+
 	it('should return the text Hello World!', async () => {
 		const resp = await worker.fetch();
 		const text = await resp.text();
-		expect(text).toBe('Hello World!');
+		expect(text).toBe('Market Data API - For usage details github.com/jamesgawn/market-data-api');
 	});
 });

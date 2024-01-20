@@ -1,32 +1,26 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
-
 export interface Env {
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace;
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace;
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket;
-	//
-	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-	// MY_SERVICE: Fetcher;
-	//
-	// Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
-	// MY_QUEUE: Queue;
 }
 
+import { RequestLike, Router, error, json, withParams} from 'itty-router';
+const router = Router();
+
+router.all('*', withParams)
+
+router.get('/fund/:isin', ({ isin }) => {
+	return error(501, "Not yet implemented - " + isin);
+});
+
+router.get('/', () => {
+	return new Response('Market Data API - For usage details github.com/jamesgawn/market-data-api');
+});
+
+  // 404 for everything else
+router.all('*', () => error(404))
+
 export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
-	},
+	fetch: (request: RequestLike, ...args: any) =>
+		router
+			.handle(request, ...args)
+			.then(json)     // send as JSON
+			.catch(error),  // catch errors
 };
